@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(path: ':CompetitionServicies')
+    implementation project(path: ':CompetitionPersistance')
+    implementation project(path: ':CompetitionModel')
+    implementation project(path: ':CompetitionClientJavaFX')
+    implementation project(path: ':CompetitionNetworking')
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+application{
+    // mainClass='StartObjectServer'
+    mainClass='StartRpcServer'
+}
