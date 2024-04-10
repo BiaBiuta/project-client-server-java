@@ -1,0 +1,8 @@
+rootProject.name = 'serverClient'
+include 'CompetitionServer'
+include 'CompetitionServicies'
+include 'CompetitionPersistance'
+include 'CompetitionModel'
+include 'CompetitionClientJavaFX'
+include 'CompetitionNetworking'
+
