@@ -14,7 +14,7 @@ import java.rmi.ServerException;
 import java.util.Properties;
 
 public class StartRpcServer {
-    private static int defaultPort = 55555;
+    private static int defaultPort = 55556;
 
     public static void main(String[] args) {
         // UserRepository userRepo=new UserRepositoryMock();

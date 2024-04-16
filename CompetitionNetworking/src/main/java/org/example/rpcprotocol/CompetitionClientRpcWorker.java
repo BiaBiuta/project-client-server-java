@@ -95,7 +95,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             Organizing org= server.findOrganizing(oDto.getUsername(),oDto.getPassword());
             try {
                 server.login(org,this);
-                return okResponse;
+                return new Response.Builder().type(ResponseType.LOGIN).data(DTOUtils.getDTO(org)).build();
             } catch (CompetitionException e) {
                 connected=false;
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
@@ -154,7 +154,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             RegistrationDTO rdto=(RegistrationDTO) request.data();
             Registration reg=DTOUtils.getFromDTO(rdto);
             Registration registration=server.registerChild(reg.getChild(),reg.getSample());
-            return new Response.Builder().type(ResponseType.PARTICIPANTS_REGISTERED).data(DTOUtils.getDTO(registration)).build();
+            return new Response.Builder().type(ResponseType.REGISTER_CHILD).data(DTOUtils.getDTO(registration)).build();
         }
         if (request.type()== RequestType.LIST_CHILDREN_FOR_SAMPLE){
             System.out.println("GetParticipants Request ...");
@@ -162,6 +162,13 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             Sample sample=server.findSample(sdto.getAgeCategory(),sdto.getSampleCategory());
             List<Child> participants=server.listChildrenForSample(sample);
             return new Response.Builder().type(ResponseType.LIST_CHILDREN).data(DTOUtils.getDTOChild(participants)).build();
+        }
+        if (request.type()== RequestType.NEW){
+            Registration reg=DTOUtils.getFromDTO((RegistrationDTO) request.data());
+            SamplesDTO sdto=(SamplesDTO) request.data();
+            Sample sample=server.findSample(sdto.getAgeCategory(),sdto.getSampleCategory());
+            List<Child> participants=server.listChildrenForSample(sample);
+            return new Response.Builder().type(ResponseType.NEW).data(DTOUtils.getDTOChild(participants)).build();
         }
 
         return response;
@@ -171,7 +178,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
     public void participantsRegistered(Registration org) throws CompetitionException {
         System.out.println("Participants registered "+org);
         RegistrationDTO orgDTO= DTOUtils.getDTO(org);
-        Response response=new Response.Builder().type(ResponseType.PARTICIPANTS_REGISTERED).data(orgDTO).build();
+        Response response=new Response.Builder().type(ResponseType.NEW).data(orgDTO).build();
         try {
             sendResponse(response);
         } catch (IOException e) {

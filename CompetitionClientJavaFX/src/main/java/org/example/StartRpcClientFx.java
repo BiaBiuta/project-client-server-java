@@ -15,7 +15,7 @@ import java.util.Properties;
 public class StartRpcClientFx extends Application {
     private Stage primaryStage;
 
-    private static int defaultChatPort = 55555;
+    private static int defaultChatPort = 55556;
     private static String defaultServer = "localhost";
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -49,10 +49,8 @@ public class StartRpcClientFx extends Application {
         FXMLLoader startPageLoader =new FXMLLoader();
         startPageLoader.setLocation(getClass().getResource("/pagini/paginaStart.fxml"));
         AnchorPane anchorPane2=startPageLoader.load();
-//        Stage stage =new Stage();
-//        stage.setScene(new Scene(anchorPane2));
         StartPageXML startPageXML=startPageLoader.getController();
-        startPageXML.setPageService(server,primaryStage);
+        startPageXML.setPageService(server,primaryStage,anchorPane2);
         ctrl.setStartPageXMLCtrl(startPageXML);
         ctrl.setAnchorPane(anchorPane2);
         primaryStage.show();

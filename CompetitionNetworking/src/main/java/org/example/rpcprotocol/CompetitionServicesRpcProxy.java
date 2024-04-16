@@ -62,7 +62,7 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
         Request req=new Request.Builder().type(RequestType.LOGIN).data(udto).build();
         sendRequest(req);
         Response response=readResponse();
-        if (response.type()== ResponseType.OK){
+        if (response.type()== ResponseType.LOGIN){
             this.client=observer;
             return DTOUtils.getFromDTO((OrganizingDTO)response.data());
         }
@@ -161,7 +161,7 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
         }
         SamplesDTO sampleDTO= DTOUtils.getDTO(sample);
         Sample sample1= findSample(sampleDTO.getAgeCategory(),sampleDTO.getSampleCategory());
-        RegistrationDTO regDTO=new RegistrationDTO(child1.getId().toString(),sample1.getId().toString());
+        RegistrationDTO regDTO=new RegistrationDTO(child1.getId().toString(),sample1.getId().toString(),sample1.getSampleCategory().getCategoryName(),sample1.getAgeCategory().getCategoryName());
         Request req=new Request.Builder().type(RequestType.REGISTER_CHILD).data(regDTO).build();
         sendRequest(req);
         Response response=readResponse();
@@ -226,10 +226,11 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
 
     }
     private boolean isUpdate(Response response){
-        return response.type()== ResponseType.PARTICIPANTS_REGISTERED ;
+        return response.type()== ResponseType.NEW ;
     }
     private void handleUpdate(Response response){
-        if (response.type()== ResponseType.PARTICIPANTS_REGISTERED){
+        if (response.type()== ResponseType.NEW){
+            System.out.println("am trimis raspuns");
             RegistrationDTO regDTO= (RegistrationDTO) response.data();
             Registration org= DTOUtils.getFromDTO((regDTO));
 

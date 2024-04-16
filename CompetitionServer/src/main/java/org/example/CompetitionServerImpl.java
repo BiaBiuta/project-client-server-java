@@ -98,8 +98,9 @@ public class CompetitionServerImpl implements ICompetitionServices{
 
         System.out.println("Child found "+childFound.getNumberOfSamples());
         Registration reg=regRepo.save(registration);
+
         //notifyObservers(new ChangeEventRegister(ChangeEvent.REGISTER,registration));
-        notifyTheOthersAdded(registration);
+        notifyTheOthersAdded(reg);
         return reg;
     }
     private void notifyTheOthersAdded(Registration reg) throws CompetitionException{
@@ -110,8 +111,10 @@ public class CompetitionServerImpl implements ICompetitionServices{
             if(client!=null)
                 executor.execute(()->{
                     try {
+
                         System.out.println("Notifying [" + org.getId()+ "] registration ["+org.getId()+"] add.");
                         client.participantsRegistered(reg);
+
                     } catch (CompetitionException e) {
                         System.err.println("Error notifying friend "+e);
                     }

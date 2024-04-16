@@ -15,6 +15,10 @@ public class SamplesDTO implements Serializable {
         this.id = id;
     }
 
+    public SamplesDTO(String id) {
+        this.id = id;
+    }
+
     public SamplesDTO(String id, String sampleCategory, String ageCategory) {
         this.id = id;
         this.sampleCategory = sampleCategory;

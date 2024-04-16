@@ -31,10 +31,14 @@ public class DTOUtils {
     public static  RegistrationDTO getDTO(Registration sample) {
         String sampleId = sample.getSample().getId().toString();
         String childId = sample.getChild().getId().toString();
-        return new RegistrationDTO(childId, sampleId);
+        return new RegistrationDTO(childId, sampleId,sample.getSample().getSampleCategory().getCategoryName(),sample.getSample().getAgeCategory().getCategoryName());
     }
     public static Registration getFromDTO(RegistrationDTO sampleDTO) {
-            Sample sampleId=new Sample(sampleDTO.getSampleId());
+        Sample sampleId=new Sample(sampleDTO.getSampleId());
+        if(sampleDTO.getSampleCategory()!=null && sampleDTO.getAgeCategory()!=null) {
+            sampleId.setSampleCategory(SampleCategory.fromString(sampleDTO.getSampleCategory()));
+            sampleId.setAgeCategory(AgeCategory.fromString(sampleDTO.getAgeCategory()));
+        }
             sampleId.setId(Integer.parseInt(sampleDTO.getSampleId()));
             Child childId=new Child (sampleDTO.getChildId());
             childId.setId(Integer.parseInt(sampleDTO.getChildId()));
@@ -47,6 +51,9 @@ public class DTOUtils {
             return new SamplesDTO(sampleCategory,ageCategory);
         }
         String id=sample.getId().toString();
+        if(sample.getSampleCategory()==null|| sample.getAgeCategory()==null){
+            return new SamplesDTO(id);
+        }
         String sampleCategory=sample.getSampleCategory().getCategoryName();
         String ageCategory=sample.getAgeCategory().getCategoryName();
         return new SamplesDTO(id,sampleCategory,ageCategory);

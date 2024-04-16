@@ -1,6 +1,7 @@
 package org.example.gui;
 
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.example.*;
 
@@ -54,13 +56,16 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
     public CheckBox checkBoxCautareComoara;
     private ICompetitionServices service;
     private Organizing user;
+    private AnchorPane anchorPane;
 
     public Organizing getUser() {
         return user;
     }
 
-    public void setUser(Organizing user) {
+    public void setUser(Organizing user) throws CompetitionException {
+        initialize();
         this.user = user;
+        initModel();
     }
 
     ObservableList<Sample> model = FXCollections.observableArrayList();
@@ -81,7 +86,7 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
     public void setSample(Sample sample) {
         this.sample = sample;
     }
-    @FXML
+
     private void initialize() {
         tableColumnNume.setCellValueFactory(cellData -> {
             String name= cellData.getValue().getSampleCategory().toString();
@@ -104,6 +109,7 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
         tableViewChildRegistration.visibleProperty().set(false);
     }
     public void  initModel() throws CompetitionException {
+        //model.clear();
         Iterable<Sample> samples = service.findAllSamples();
         List<Sample> sampleList = StreamSupport.stream(samples.spliterator(),false)
                 .collect(Collectors.toList());
@@ -179,9 +185,10 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
 
     }
 
-    public void setPageService(ICompetitionServices service, Stage stage) throws CompetitionException {
+    public void setPageService(ICompetitionServices service, Stage stage, AnchorPane anchorPane) throws CompetitionException {
         this.service = service;
         this.stage=stage;
+        this.anchorPane=anchorPane;
         //initModel();
     }
     public void handleLogout(ActionEvent ev){
@@ -207,7 +214,15 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
 
     @Override
     public void participantsRegistered(Registration org) throws CompetitionException {
+        Platform.runLater(()->{
+            try {
+                System.out.println(org.getSample().getId());
 
+                initModel2(org.getSample());
+            } catch (CompetitionException e) {
+                e.printStackTrace();
+            }
+        });
     }
     @FXML
     private void handleButtonLogout(ActionEvent actionEvent) {
