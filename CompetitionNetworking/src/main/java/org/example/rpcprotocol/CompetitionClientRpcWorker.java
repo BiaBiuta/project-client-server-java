@@ -35,7 +35,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             try {
                 Object request=input.readObject();
                 Response response=handleRequest((Request)request);
-                System.out.println("Request received "+request);
+               // System.out.println("Request received "+request);
                 if (response!=null){
                     sendResponse(response);
                 }
@@ -80,7 +80,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
     }
     private static Response okResponse=new Response.Builder().type(ResponseType.OK).build();
     private void sendResponse(Response response) throws IOException{
-        System.out.println("sending response "+response);
+       // System.out.println("sending response "+response);
         synchronized (output) {
             output.writeObject(response);
             output.flush();
@@ -89,7 +89,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
     private Response handleRequest(Request request) throws CompetitionException {
         Response response=null;
         if (request.type()== RequestType.LOGIN){
-            System.out.println("Login request ..."+request.type());
+           // System.out.println("Login request ..."+request.type());
             OrganizingDTO oDto=(OrganizingDTO) request.data();
 //            Organizing org = DTOUtils.getFromDTO(oDto);
             Organizing org= server.findOrganizing(oDto.getUsername(),oDto.getPassword());
@@ -116,7 +116,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             }
         }
         if (request.type()== RequestType.FIND_ALL_SAMPLES){
-            System.out.println("FindAllSamples ...");
+            //System.out.println("FindAllSamples ...");
             Iterable<Sample> samples=server.findAllSamples();
 
             List<SamplesDTO> samplesDTO= DTOUtils.getDTOSample(samples);
@@ -124,44 +124,51 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
             return new Response.Builder().type(ResponseType.FIND_ALL_SAMPLES).data(samplesDTO).build();
         }
         if (request.type()== RequestType.FIND_CHILD){
-            System.out.println("GetLoggedFriends Request ...");
+           // System.out.println("GetLoggedFriends Request ...");
             ChildDTO udto=(ChildDTO) request.data();
             Child user= server.findChild(udto.getName());
             return new Response.Builder().type(ResponseType.FIND_CHILD).data(user).build();
         }
         if (request.type()== RequestType.SAVE_CHILD){
-            System.out.println("GetLoggedFriends Request ...");
+           // System.out.println("GetLoggedFriends Request ...");
             ChildDTO udto=(ChildDTO) request.data();
             Child user= server.saveChild(udto.getName(),Integer.parseInt(udto.getAge()));
             return new Response.Builder().type(ResponseType.SAVE_CHILD).data(DTOUtils.getDTO(user)).build();
         }
 
         if (request.type()== RequestType.FIND_ORGANIZING){
-            System.out.println("GetLoggedFriends Request ...");
+           // System.out.println("GetLoggedFriends Request ...");
             OrganizingDTO udto=(OrganizingDTO) request.data();
             Organizing user= DTOUtils.getFromDTO(udto);
             return new Response.Builder().type(ResponseType.FIND_ORGANIZING).data(user).build();
         }
         if (request.type()== RequestType.FIND_SAMPLE){
-            System.out.println("FindSample Request ...");
+           // System.out.println("FindSample Request ...");
             SamplesDTO sdto=(SamplesDTO) request.data();
             Sample sam=DTOUtils.getFromDTO(sdto);
             Sample sample=server.findSample(sdto.getAgeCategory(),sdto.getSampleCategory());
             return new Response.Builder().type(ResponseType.FIND_SAMPLE).data(DTOUtils.getDTO(sample)).build();
         }
         if (request.type()== RequestType.REGISTER_CHILD){
-            System.out.println("RegisterChild Request ...");
+           // System.out.println("RegisterChild Request ...");
             RegistrationDTO rdto=(RegistrationDTO) request.data();
             Registration reg=DTOUtils.getFromDTO(rdto);
             Registration registration=server.registerChild(reg.getChild(),reg.getSample());
             return new Response.Builder().type(ResponseType.REGISTER_CHILD).data(DTOUtils.getDTO(registration)).build();
         }
         if (request.type()== RequestType.LIST_CHILDREN_FOR_SAMPLE){
-            System.out.println("GetParticipants Request ...");
+            //System.out.println("GetParticipants Request ...");
             SamplesDTO sdto=(SamplesDTO) request.data();
             Sample sample=server.findSample(sdto.getAgeCategory(),sdto.getSampleCategory());
             List<Child> participants=server.listChildrenForSample(sample);
             return new Response.Builder().type(ResponseType.LIST_CHILDREN).data(DTOUtils.getDTOChild(participants)).build();
+        }
+        if (request.type()== RequestType.NUMBER_OF_CHILDREN_FOR_SAMPLE){
+            //System.out.println("GetParticipants Request ...");
+            SamplesDTO sdto=(SamplesDTO) request.data();
+            Sample sample=server.findSample(sdto.getAgeCategory(),sdto.getSampleCategory());
+            int number=server.numberOfChildrenForSample(sample);
+            return new Response.Builder().type(ResponseType.NUMBER_OF_CHILDREN_FOR_SAMPLE).data(String.valueOf(number)).build();
         }
         if (request.type()== RequestType.NEW){
             Registration reg=DTOUtils.getFromDTO((RegistrationDTO) request.data());
@@ -176,7 +183,7 @@ public class CompetitionClientRpcWorker implements Runnable, ICompetitionObserve
 
     @Override
     public void participantsRegistered(Registration org) throws CompetitionException {
-        System.out.println("Participants registered "+org);
+        //System.out.println("Participants registered "+org);
         RegistrationDTO orgDTO= DTOUtils.getDTO(org);
         Response response=new Response.Builder().type(ResponseType.NEW).data(orgDTO).build();
         try {

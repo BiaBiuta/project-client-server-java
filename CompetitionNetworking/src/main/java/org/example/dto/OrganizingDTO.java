@@ -3,10 +3,18 @@ package org.example.dto;
 import java.io.Serializable;
 
 public class OrganizingDTO implements Serializable {
+    private String id;
     private String username;
     private String password;
     private String name;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public OrganizingDTO(String username, String password) {
         this.username = username;
@@ -29,10 +37,10 @@ public class OrganizingDTO implements Serializable {
         this.name = name;
     }
 
-    public OrganizingDTO(String username, String password, String name) {
+    public OrganizingDTO(String id,String username, String password) {
         this.username = username;
         this.password = password;
-        this.name = name;
+        this.id = id;
     }
 
     public String getUsername() {

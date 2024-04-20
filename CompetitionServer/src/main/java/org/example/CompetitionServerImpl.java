@@ -96,7 +96,7 @@ public class CompetitionServerImpl implements ICompetitionServices{
 
         childRepo.update(childFound);
 
-        System.out.println("Child found "+childFound.getNumberOfSamples());
+      //  System.out.println("Child found "+childFound.getNumberOfSamples());
         Registration reg=regRepo.save(registration);
 
         //notifyObservers(new ChangeEventRegister(ChangeEvent.REGISTER,registration));

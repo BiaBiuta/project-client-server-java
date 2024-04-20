@@ -102,8 +102,16 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
     }
 
     @Override
-    public int numberOfChildrenForSample(Sample sample) {
-        return 0;
+    public int numberOfChildrenForSample(Sample sample) throws CompetitionException {
+        Request req=new Request.Builder().type(RequestType.NUMBER_OF_CHILDREN_FOR_SAMPLE).data(DTOUtils.getDTO(sample)).build();
+        sendRequest(req);
+        Response response=readResponse();
+        if (response.type()== ResponseType.ERROR){
+            String err=response.data().toString();
+            throw new CompetitionException(err);
+        }
+        String numberString=response.data().toString();
+        return Integer.parseInt(numberString);
     }
 
     @Override
@@ -148,7 +156,7 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
         }
         SamplesDTO sampleDTO1= (SamplesDTO) response.data();
         Sample sample1= DTOUtils.getFromDTO(sampleDTO1);
-        System.out.println(sample1.getId());
+       // System.out.println(sample1.getId());
         return sample1;
     }
 
@@ -230,7 +238,7 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
     }
     private void handleUpdate(Response response){
         if (response.type()== ResponseType.NEW){
-            System.out.println("am trimis raspuns");
+            //System.out.println("am trimis raspuns");
             RegistrationDTO regDTO= (RegistrationDTO) response.data();
             Registration org= DTOUtils.getFromDTO((regDTO));
 
@@ -259,7 +267,7 @@ public class CompetitionServicesRpcProxy implements ICompetitionServices {
             while(!finished){
                 try {
                     Object response=input.readObject();
-                    System.out.println("response received "+response);
+                    //System.out.println("response received "+response);
                     if (isUpdate((Response)response)){
                         handleUpdate((Response)response);
                     }else{

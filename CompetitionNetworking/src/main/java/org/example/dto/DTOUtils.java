@@ -9,6 +9,12 @@ public class DTOUtils {
     public static Organizing getFromDTO(OrganizingDTO orgdto) {
         String username = orgdto.getUsername();
         String password = orgdto.getPassword();
+        if(orgdto.getId()!=null){
+            Organizing org=new Organizing(username,password);
+            org.setId(Integer.parseInt(orgdto.getId()));
+            return org;
+
+        }
 //        String name = orgdto.getName();
         return new Organizing(username, password);
     }
@@ -16,7 +22,14 @@ public class DTOUtils {
         String username=org.getUsername();
         String password=org.getPassword();
         String name=org.getName();
-        return new OrganizingDTO(username,password);
+
+        if(org.getId()!=null) {
+            String id=org.getId().toString();
+            return new OrganizingDTO(id, username, password);
+        }
+        else {
+            return new OrganizingDTO(username, password);
+        }
     }
     public static Sample getFromDTO(SamplesDTO sampleDTO) {
         String sampleCategory = sampleDTO.getSampleCategory();

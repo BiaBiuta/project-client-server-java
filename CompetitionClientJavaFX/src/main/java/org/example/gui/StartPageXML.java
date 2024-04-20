@@ -102,8 +102,13 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
             Sample sample = new Sample(cellData.getValue().getSampleCategory(),cellData.getValue().getAgeCategory());
             int id=cellData.getValue().getId();
             sample.setId(id);
-            int reg =service.numberOfChildrenForSample(sample);
-            System.out.println(reg);
+            int reg = 0;
+            try {
+                reg = service.numberOfChildrenForSample(sample);
+            } catch (CompetitionException e) {
+                throw new RuntimeException(e);
+            }
+            //System.out.println(reg);
             return new SimpleObjectProperty<>(reg);
         });
         tableViewChildRegistration.visibleProperty().set(false);
@@ -191,9 +196,9 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
         this.anchorPane=anchorPane;
         //initModel();
     }
-    public void handleLogout(ActionEvent ev){
-        stage.close();
-    }
+//    public void handleLogout(ActionEvent ev){
+//        stage.close();
+//    }
 
 
 
@@ -216,16 +221,17 @@ public class StartPageXML implements Initializable, ICompetitionObserver {
     public void participantsRegistered(Registration org) throws CompetitionException {
         Platform.runLater(()->{
             try {
-                System.out.println(org.getSample().getId());
+                //System.out.println(org.getSample().getId());
 
                 initModel2(org.getSample());
+                initModel();
             } catch (CompetitionException e) {
                 e.printStackTrace();
             }
         });
     }
     @FXML
-    private void handleButtonLogout(ActionEvent actionEvent) {
+    private void handleLogout(ActionEvent actionEvent) {
         logout();
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }

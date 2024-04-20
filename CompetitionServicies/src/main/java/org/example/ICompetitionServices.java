@@ -8,7 +8,7 @@ public interface ICompetitionServices {
     void logout(Organizing user,ICompetitionObserver observer) throws CompetitionException;
     Organizing findOrganizing(String username, String password) throws CompetitionException;
 
-    int numberOfChildrenForSample(Sample sample);
+    int numberOfChildrenForSample(Sample sample) throws CompetitionException;
 
     Iterable<Sample> findAllSamples() throws CompetitionException;
     Child saveChild(String name,int age) throws CompetitionException;
